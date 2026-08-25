@@ -49,6 +49,11 @@ slug를 비우면 자동 선택이 Seedance 2.0(최대 15초)을 고를 수 있�
 - Seedance 2.5에서 end 프레임을 쓰려면 start 프레임이 반드시 함께 있어야 한다.
 - 오디오는 `audioUrl`이 아니라 `references[]`에 `type: "audio"`로 넣는다.
 - 로컬 파일은 서버가 채팅 첨부를 읽지 못한다. 업로드 플로우를 거치거나 Magnific 라이브러리의 기존 에셋을 쓴다.
+- **`references[]`에 `modifier_key`를 넣지 않는다.** 프롬프트의 `@tag`를 특정 레퍼런스에 연결하려고 쓰는 필드지만, Seedance 일반 레퍼런스에서는 동작하지 않고 작업이 큐 직후 `failed`로 죽는다(`failureReason: unknown`). 실패 기록의 `mediaCollection`이 비어 있으면 레퍼런스가 하나도 붙지 않은 것이므로 이 경우를 의심한다. `custom_model_id`를 쓰는 커스텀 모델 전용 필드로 취급한다.
+- 따라서 프롬프트에 `@image1` 같은 태그를 쓰지 않는다. 연결 기제가 없어 리터럴 텍스트로 남고, 모델이 화면에 글자로 그리려 할 수 있다. `references[]`는 순서대로 전달되므로 "All five attached reference images show the same dog and the same garment"처럼 **묶어서 지칭**하고, 고정할 디테일은 텍스트로 서술한다.
+- 레퍼런스는 `url`에 creation identifier를 그대로 넣는다(`webUrl` 아님).
+- 생성 후 `creations_get`으로 `mediaCollection`에 `type: reference`가 넣은 장수만큼 있는지 확인한다. 이게 레퍼런스가 실제로 붙었는지 검증하는 유일한 방법이다.
+- 실패한 작업은 크레딧이 차감되지 않는다. 다만 30초 본생성 전에 2.0 Mini / 480p / 4초(수백 크레딧)로 레퍼런스 첨부만 먼저 검증하면 시간을 아낄 수 있다.
 
 ### 프롬프트 길이
 
