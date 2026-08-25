@@ -28,6 +28,21 @@ slug를 비우면 자동 선택이 Seedance 2.0(최대 15초)을 고를 수 있�
 - 30초 초과: 클립으로 분할해 각각 생성한 뒤 `video_concatenate`로 합친다.
   클립 간 인물·의상·조명·시선 방향·소품 상태를 POSITIVE LOCKS에 동일하게 명시한다.
 
+### 제품 일관성 (최우선 규칙)
+
+강아지가 착용·사용하는 제품은 **어떤 경우에도 변형하지 않는다.** 레퍼런스 사진에 있는 그대로 유지한다.
+
+고정 대상: 색상 배치(컬러 블로킹 위치까지), 실루엣·재단·기장, 봉제선·퀼팅 패턴, 지퍼·버클·D링 등 부자재의 위치와 색, 브랜드 로고·라벨의 위치와 형태, 하네스 스트랩 경로와 폭.
+
+지키는 방법:
+
+- 레퍼런스는 `references[]`에 `type: "product"`(제품 형태 고정) + `type: "character"`(반려동물 identity 고정)로 나눠서 넣는다. 각도가 다른 사진을 함께 넣어 프로필·후면 드리프트를 막는다.
+- 레퍼런스에 이미 보이는 디테일이라도 **프롬프트 텍스트에 한 번 더 말로 적는다.** 모델이 레퍼런스의 작은 요소를 흘리는 일이 잦다.
+- `POSITIVE LOCKS`에 제품 고정 문구를 긍정형으로 넣는다.
+  예: `the quilted bomber keeps the same olive shell, ivory side panel, ribbed olive collar and cuffs, same zipper line and the same brand tab in the same position in every frame.`
+- 로고 텍스트는 글자로 읽히도록 설계하지 않는다. Seedance는 생성된 글자를 뭉갠다. 로고는 **위치와 형태(작은 라벨 탭)** 로만 고정하고, 판독이 필요한 로고는 후반 합성으로 처리한다.
+- 결과를 받으면 컬러 배치·부자재 위치·로고 위치를 레퍼런스와 대조해 확인한 뒤 전달한다.
+
 ### 레퍼런스 규칙
 
 - `keyframes.start` / `keyframes.end`와 `references[]`(image·video·character·product·style·color·effect)는 **동시에 쓸 수 없다.** 둘 중 하나만 선택한다.
@@ -37,5 +52,6 @@ slug를 비우면 자동 선택이 Seedance 2.0(최대 15초)을 고를 수 있�
 
 ### 프롬프트 길이
 
-Magnific은 Seedance 2.0/2.5에서 10,000자까지 허용하지만, 안전선은 4,000자다.
-초과하면 월드빌딩·환경 묘사부터 줄이고 샷 액션·카메라 값·LOCKS는 유지한다.
+Magnific의 `video_models_list`는 Seedance 2.0/2.5의 `prompt.maxLength`를 10,000자로 보고한다.
+목표는 4,000자 안팎이되, 제품 고정용 ACTIVE REFERENCES와 POSITIVE LOCKS를 깎아서 맞추지는 않는다.
+줄여야 하면 월드빌딩·환경 묘사부터 줄이고 샷 액션·카메라 값·LOCKS는 유지한다.
